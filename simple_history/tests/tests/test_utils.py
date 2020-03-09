@@ -4,8 +4,14 @@ from django.utils.timezone import now
 from mock import Mock, patch
 
 from simple_history.exceptions import NotHistoricalModelError
-from simple_history.tests.models import Document, Place, Poll, PollWithExcludeFields
-from simple_history.utils import bulk_create_with_history
+from simple_history.tests.models import (
+    Document,
+    Place,
+    Poll,
+    PollWithExcludeFields,
+    Street,
+)
+from simple_history.utils import bulk_create_with_history, update_change_reason
 
 
 class BulkCreateWithHistoryTestCase(TestCase):
@@ -112,3 +118,29 @@ class BulkCreateWithHistoryTransactionTestCase(TransactionTestCase):
 
         self.assertEqual(Poll.objects.count(), 0)
         self.assertEqual(Poll.history.count(), 0)
+
+    @patch("simple_history.utils.get_history_manager_for_model")
+    def test_bulk_create_no_ids_return(self, hist_manager_mock):
+        objects = [Place(id=1, name="Place 1")]
+        model = Mock(
+            objects=Mock(
+                bulk_create=Mock(return_value=[Place(name="Place 1")]),
+                filter=Mock(return_value=objects),
+            )
+        )
+        result = bulk_create_with_history(objects, model)
+        self.assertEqual(result, objects)
+        hist_manager_mock().bulk_history_create.assert_called_with(
+            objects, batch_size=None
+        )
+
+
+class UpdateChangeReasonTestCase(TestCase):
+    def test_update_change_reason_with_excluded_fields(self):
+        poll = PollWithExcludeFields(
+            question="what's up?", pub_date=now(), place="The Pub"
+        )
+        poll.save()
+        update_change_reason(poll, "Test change reason.")
+        most_recent = poll.history.order_by("-history_date").first()
+        self.assertEqual(most_recent.history_change_reason, "Test change reason.")
