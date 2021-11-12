@@ -16,7 +16,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.fields.proxy import OrderWrt
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from six import python_2_unicode_compatible
+from django.utils.encoding import smart_text
 from django.utils.text import format_lazy
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
