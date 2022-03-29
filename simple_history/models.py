@@ -17,10 +17,10 @@ from django.db.models import Q
 from django.db.models.fields.proxy import OrderWrt
 from django.urls import reverse
 from six import python_2_unicode_compatible
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.utils.text import format_lazy
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from simple_history import utils
 from . import exceptions
@@ -447,7 +447,7 @@ class HistoricalRecords(object):
         if self.user_set_verbose_name:
             name = self.user_set_verbose_name
         else:
-            name = format_lazy("historical {}", smart_text(model._meta.verbose_name))
+            name = format_lazy("historical {}", smart_str(model._meta.verbose_name))
         meta_fields["verbose_name"] = name
         if self.app:
             meta_fields["app_label"] = self.app

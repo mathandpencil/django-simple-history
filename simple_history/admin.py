@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django import http
 from django.conf import settings
-from django.conf.urls import url
+from django.urls import re_path
 from django.contrib import admin
 from django.contrib.admin import helpers
 from django.contrib.admin.utils import unquote
@@ -10,10 +10,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import mark_safe
 from django.utils.text import capfirst
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from . import utils
 
@@ -33,7 +33,7 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
         opts = self.model._meta
         info = opts.app_label, opts.model_name
         history_urls = [
-            url(
+            re_path(
                 "^([^/]+)/history/([^/]+)/$",
                 admin_site.admin_view(self.history_form_view),
                 name="%s_%s_simple_history" % info,
@@ -80,9 +80,9 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
             content_type.model,
         )
         context = {
-            "title": _("Change history: %s") % force_text(obj),
+            "title": _("Change history: %s") % force_str(obj),
             "action_list": action_list,
-            "module_name": capfirst(force_text(opts.verbose_name_plural)),
+            "module_name": capfirst(force_str(opts.verbose_name_plural)),
             "object": obj,
             "root_path": getattr(self.admin_site, "root_path", None),
             "app_label": app_label,
@@ -102,8 +102,8 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
             verbose_name = obj._meta.verbose_name
 
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {
-                "name": force_text(verbose_name),
-                "obj": force_text(obj),
+                "name": force_str(verbose_name),
+                "obj": force_str(obj),
             }
 
             self.message_user(
@@ -167,7 +167,7 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
         model_name = original_opts.model_name
         url_triplet = self.admin_site.name, original_opts.app_label, model_name
         context = {
-            "title": _("Revert %s") % force_text(obj),
+            "title": _("Revert %s") % force_str(obj),
             "adminform": admin_form,
             "object_id": object_id,
             "original": obj,

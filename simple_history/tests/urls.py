@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.conf.urls import url
+from django.urls import path
 from django.contrib import admin
 
 from simple_history.tests.view import (
@@ -18,26 +18,26 @@ from . import other_admin
 admin.autodiscover()
 
 urlpatterns = [
-    url(r"^admin/", admin.site.urls),
-    url(r"^other-admin/", other_admin.site.urls),
-    url(
-        r"^bucket_data/add/$",
+    path('admin/', admin.site.urls),
+    path('other-admin/', other_admin.site.urls),
+    path(
+        'bucket_data/add/',
         BucketDataRegisterRequestUserCreate.as_view(),
         name="bucket_data-add",
     ),
-    url(
-        r"^bucket_data/(?P<pk>[0-9]+)/$",
+    path(
+        'bucket_data/<int:pk>/',
         BucketDataRegisterRequestUserDetail.as_view(),
         name="bucket_data-detail",
     ),
-    url(r"^poll/add/$", PollCreate.as_view(), name="poll-add"),
-    url(
-        r"^pollwithhistoricalipaddress/add$",
+    path('poll/add/', PollCreate.as_view(), name="poll-add"),
+    path(
+        'pollwithhistoricalipaddress/add',
         PollWithHistoricalIPAddressCreate.as_view(),
         name="pollip-add",
     ),
-    url(r"^poll/(?P<pk>[0-9]+)/$", PollUpdate.as_view(), name="poll-update"),
-    url(r"^poll/(?P<pk>[0-9]+)/delete/$", PollDelete.as_view(), name="poll-delete"),
-    url(r"^polls/(?P<pk>[0-9]+)/$", PollDetail.as_view(), name="poll-detail"),
-    url(r"^polls/$", PollList.as_view(), name="poll-list"),
+    path('poll/<int:pk>/', PollUpdate.as_view(), name="poll-update"),
+    path('poll/<int:pk>/delete/', PollDelete.as_view(), name="poll-delete"),
+    path('polls/<int:pk>/', PollDetail.as_view(), name="poll-detail"),
+    path('polls/', PollList.as_view(), name="poll-list"),
 ]

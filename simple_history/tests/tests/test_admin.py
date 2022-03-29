@@ -6,7 +6,7 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 from django.urls import reverse
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django_webtest import WebTest
 from mock import ANY, patch
 
@@ -450,7 +450,7 @@ class AdminSiteTest(WebTest):
             # Verify this is set for original object
             "original": poll,
             "change_history": False,
-            "title": "Revert %s" % force_text(poll),
+            "title": "Revert %s" % force_str(poll),
             "adminform": ANY,
             "object_id": poll.id,
             "is_popup": False,
@@ -503,7 +503,7 @@ class AdminSiteTest(WebTest):
             # Verify this is set for history object not poll object
             "original": history.instance,
             "change_history": True,
-            "title": "Revert %s" % force_text(history.instance),
+            "title": "Revert %s" % force_str(history.instance),
             "adminform": ANY,
             "object_id": poll.id,
             "is_popup": False,
@@ -556,7 +556,7 @@ class AdminSiteTest(WebTest):
             # Verify this is set for history object not poll object
             "original": poll,
             "change_history": False,
-            "title": "Revert %s" % force_text(poll),
+            "title": "Revert %s" % force_str(poll),
             "adminform": ANY,
             "object_id": poll.id,
             "is_popup": False,
@@ -609,7 +609,7 @@ class AdminSiteTest(WebTest):
             # Verify this is set for history object
             "original": history.instance,
             "change_history": True,
-            "title": "Revert %s" % force_text(history.instance),
+            "title": "Revert %s" % force_str(history.instance),
             "adminform": ANY,
             "object_id": obj.id,
             "is_popup": False,
@@ -668,7 +668,7 @@ class AdminSiteTest(WebTest):
             "anything_else": "will be merged into context",
             "original": poll,
             "change_history": False,
-            "title": "Revert %s" % force_text(poll),
+            "title": "Revert %s" % force_str(poll),
             "adminform": ANY,
             "object_id": poll.id,
             "is_popup": False,
