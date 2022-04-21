@@ -20,8 +20,10 @@ def update_change_reason(instance, reason):
             attrs[field.attname] = value
 
     record = history.filter(**attrs).order_by("-history_date").first()
-    record.history_change_reason = reason
-    record.save()
+    # https://github.com/jazzband/django-simple-history/issues/672#issuecomment-935336094
+    if record:
+        record.history_change_reason = reason
+        record.save()
 
 
 def get_history_manager_for_model(model):
